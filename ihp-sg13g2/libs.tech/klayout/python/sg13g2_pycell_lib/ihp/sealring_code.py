@@ -39,8 +39,8 @@ class sealring(DloGen):
         specs('cdf_version', CDFVersion, 'CDF Version')
         specs('Display', 'Selected', 'Display', ChoiceConstraint(['All', 'Selected']))
 
-        specs('l', defL, 'Length(X-Axis)')
-        specs('w', defW, 'Width(Y-Axis)')
+        specs('w', defW, 'Width(X-Axis)')
+        specs('l', defL, 'Length(Y-Axis)')
         specs('addLabel', 'nil', 'Add sub! label', ChoiceConstraint(['nil', 't']))
         specs('addSlit', 'nil' , 'Add Slit', ChoiceConstraint(['nil', 't']))
 
@@ -75,6 +75,7 @@ class sealring(DloGen):
         # PCell Code
 
         edgeBox = Numeric(self.edgeBox) * 1e6
+        # w = Width (X-Axis), l = Length (Y-Axis).
         w = Numeric(self.w) * 1e6 + edgeBox * 2;
         l = Numeric(self.l) * 1e6 + edgeBox * 2;
 
@@ -149,23 +150,23 @@ class sealring(DloGen):
             item_list = []
 
         # Copy Corners
-        ihpCopyFig(groupId, Point(l, w), 'R180')
-        ihpCopyFig(groupId, Point(l, 0), 'R90')
-        ihpCopyFig(groupId, Point(0, w), 'R270')
+        ihpCopyFig(groupId, Point(w, l), 'R180')
+        ihpCopyFig(groupId, Point(w, 0), 'R90')
+        ihpCopyFig(groupId, Point(0, l), 'R270')
 
         # end PCell Code
 
         # Straight Lines
-        dbCreateRect(self, Layer('Passiv', 'drawing'), Box(edgeBox, corner_end, corner_width + edgeBox, w - corner_end))
-        dbCreateRect(self, Layer('Passiv', 'drawing'), Box(corner_end, edgeBox, l - corner_end, corner_width + edgeBox))
-        dbCreateRect(self, Layer('Passiv', 'drawing'), Box(l - edgeBox, corner_end, l - corner_width - edgeBox, w - corner_end))
-        dbCreateRect(self, Layer('Passiv', 'drawing'), Box(corner_end, w - edgeBox, l - corner_end, w - corner_width - edgeBox))
-        
+        dbCreateRect(self, Layer('Passiv', 'drawing'), Box(edgeBox, corner_end, corner_width + edgeBox, l - corner_end))
+        dbCreateRect(self, Layer('Passiv', 'drawing'), Box(corner_end, edgeBox, w - corner_end, corner_width + edgeBox))
+        dbCreateRect(self, Layer('Passiv', 'drawing'), Box(w - edgeBox, corner_end, w - corner_width - edgeBox, l - corner_end))
+        dbCreateRect(self, Layer('Passiv', 'drawing'), Box(corner_end, l - edgeBox, w - corner_end, l - corner_width - edgeBox))
+
         for layer in layers :
-            dbCreateRect(self, Layer(layer, 'drawing'), Box(metalOffset, corner_end, metalOffset + corner_width, w - corner_end))
-            dbCreateRect(self, Layer(layer, 'drawing'), Box(corner_end, metalOffset, l - corner_end, metalOffset + corner_width))
-            dbCreateRect(self, Layer(layer, 'drawing'), Box(l - metalOffset, corner_end, l - corner_width - metalOffset, w - corner_end))
-            dbCreateRect(self, Layer(layer, 'drawing'), Box(corner_end, w - metalOffset, l - corner_end, w - corner_width - metalOffset))
+            dbCreateRect(self, Layer(layer, 'drawing'), Box(metalOffset, corner_end, metalOffset + corner_width, l - corner_end))
+            dbCreateRect(self, Layer(layer, 'drawing'), Box(corner_end, metalOffset, w - corner_end, metalOffset + corner_width))
+            dbCreateRect(self, Layer(layer, 'drawing'), Box(w - metalOffset, corner_end, w - corner_width - metalOffset, l - corner_end))
+            dbCreateRect(self, Layer(layer, 'drawing'), Box(corner_end, l - metalOffset, w - corner_end, l - corner_width - metalOffset))
 
         for layer in vias :
             if layer == 'TopVia1' :
@@ -181,21 +182,21 @@ class sealring(DloGen):
                 viaWidth = vian_size
                 viaLength = 4.2
 
-            dbCreateRect(self, Layer(layer, 'drawing'), Box(viaOffset-0.1, corner_end, viaOffset + viaWidth - 0.1, w - corner_end))
-            dbCreateRect(self, Layer(layer, 'drawing'), Box(corner_end, viaOffset-0.1, l - corner_end, viaOffset + viaWidth - 0.1))
-            dbCreateRect(self, Layer(layer, 'drawing'), Box(l - viaOffset+0.1, corner_end, l - viaWidth - viaOffset + 0.1, w - corner_end))
-            dbCreateRect(self, Layer(layer, 'drawing'), Box(corner_end, w - viaOffset+0.1, l - corner_end, w - viaWidth - viaOffset + 0.1))
+            dbCreateRect(self, Layer(layer, 'drawing'), Box(viaOffset-0.1, corner_end, viaOffset + viaWidth - 0.1, l - corner_end))
+            dbCreateRect(self, Layer(layer, 'drawing'), Box(corner_end, viaOffset-0.1, w - corner_end, viaOffset + viaWidth - 0.1))
+            dbCreateRect(self, Layer(layer, 'drawing'), Box(w - viaOffset+0.1, corner_end, w - viaWidth - viaOffset + 0.1, l - corner_end))
+            dbCreateRect(self, Layer(layer, 'drawing'), Box(corner_end, l - viaOffset+0.1, w - corner_end, l - viaWidth - viaOffset + 0.1))
 
         # EdgeSeal box around sealring
         dbCreateRect(self, Layer('EdgeSeal', 'boundary'),
-            Box(edgeBox_startx, edgeBox_starty, l, w))
-            
+            Box(edgeBox_startx, edgeBox_starty, w, l))
+
         # Creating text label w/ area for device registration
-        sealringArea = (l * w) / 1e12 # mm2
-        pcLabelText = 'Device registration size: x={0:.1f} um ; y={1:.1f} um\nCalculated area: {2:.1e} sq mm'.format(l, w, sealringArea)
+        sealringArea = (w * l) / 1e12 # mm2
+        pcLabelText = 'Device registration size: x={0:.1f} um ; y={1:.1f} um\nCalculated area: {2:.1e} sq mm'.format(w, l, sealringArea)
         pcInst = dbCreateLabel(self, Layer('TEXT', 'drawing'), Point(5.0, 5.0), pcLabelText, 'lowerLeft', 'R0', Font.EURO_STYLE, 5.0)
-        
+
         # Creating text label w/ PDK repo commit version
         pcLabelText = "PDK version: " + get_git_commit_version()
-        dbCreateLabel(self, Layer('TEXT', 'drawing'), Point(5.0, w - 10.0), pcLabelText, 'lowerLeft', 'R0', Font.EURO_STYLE, 5.0)
-        
+        dbCreateLabel(self, Layer('TEXT', 'drawing'), Point(5.0, l - 10.0), pcLabelText, 'lowerLeft', 'R0', Font.EURO_STYLE, 5.0)
+
