@@ -14,7 +14,7 @@
 #		See the License for the specific language governing permissions and
 #		limitations under the License.
 #		
-#		Generated on Mon Jun 29 15:00:06 2026		
+#		Generated on Tue Jun 30 16:27:09 2026		
 #				
 # ------------------------------------------------------ 
 
@@ -24,11 +24,11 @@ D A T A S H E E T
 #################
 
 
-Name             : RM_IHPSG13_2P_64x22_c2_bm_bist
-Size             : 64 words x 22 bits
+Name             : RM_IHPSG13_1P_2048x32_c2_bm_bist
+Size             : 2048 words x 32 bits
 Column Mux       : 2
-Number of Ports  : 2
-Area (h x w)     : 74.87 x 526.03 = 39383.87 square microns
+Number of Ports  : 1
+Area (h x w)     : 626.70 x 416.64 = 261108.29 square microns
 
 
 ##################
@@ -36,8 +36,7 @@ Introduction
 ##################
 
 
-This 2-port macro has a one-cycle data-access.
-Both ports operate independly from each other, there is no conflict handling included.
+This 1-port macro has a one-cycle data-access.
 For timing information overview have a look at the timing diagrams in the "Timing Diagrams" section below.
 
 IMPORTANT: Input port *_DLY must always be tied to '1'.
@@ -51,17 +50,17 @@ Schematic View
                     ________________________________________
                    |                                        |
                    |                                        |
-                ---|A_DIN[21:0]                             |
-                ---|A_BM[21:0]                              |
-                ---|A_ADDR[5:0]                             |
+                ---|A_DIN[31:0]                             |
+                ---|A_BM[31:0]                              |
+                ---|A_ADDR[10:0]                            |
                 ---|A_MEN                                   |
                 ---|A_REN                                   |
                 ---|A_WEN                                   |
                 ---|A_CLK                                   |
                    |                                        |
-                ---|A_BIST_DIN[21:0]                        |
-                ---|A_BIST_BM[21:0]                         |
-                ---|A_BIST_ADDR[5:0]                        |
+                ---|A_BIST_DIN[31:0]                        |
+                ---|A_BIST_BM[31:0]                         |
+                ---|A_BIST_ADDR[10:0]                       |
                 ---|A_BIST_MEN                              |
                 ---|A_BIST_REN                              |
                 ---|A_BIST_WEN                              |
@@ -71,29 +70,7 @@ Schematic View
                    |                                        |
                 ---|A_DLY                                   |
                    |                                        |
-                   |                            A_DOUT[21:0]|---
-                   |                                        |
-                   |                            B_DOUT[21:0]|---
-                   |                                        |
-                ---|B_DIN[21:0]                             |
-                ---|B_BM[21:0]                              |
-                ---|B_ADDR[5:0]                             |
-                ---|B_MEN                                   |
-                ---|B_REN                                   |
-                ---|B_WEN                                   |
-                ---|B_CLK                                   |
-                   |                                        |
-                ---|B_BIST_DIN[21:0]                        |
-                ---|B_BIST_BM[21:0]                         |
-                ---|B_BIST_ADDR[5:0]                        |
-                ---|B_BIST_MEN                              |
-                ---|B_BIST_REN                              |
-                ---|B_BIST_WEN                              |
-                ---|B_BIST_CLK                              |
-                   |                                        |
-                ---|B_BIST_EN                               |
-                   |                                        |
-                ---|B_DLY                                   |
+                   |                            A_DOUT[31:0]|---
                    |                                        |
                    |________________________________________|
 
@@ -105,41 +82,23 @@ Macro Interface Signal List
 
 Signal              Sensitivity                 Logic            Direction     Description
 ------              -----------                 -----            ---------     -----------
-A_ADDR[5:0]         Positive Clock Edge         Positive         Input         6 address bits  
-A_DIN[21:0]         Positive Clock Edge         Positive         Input         22 data bits 
-A_BM[21:0]          Positive Clock Edge         Positive         Input         22 bit mask bits   
+A_ADDR[10:0]        Positive Clock Edge         Positive         Input         11 address bits  
+A_DIN[31:0]         Positive Clock Edge         Positive         Input         32 data bits 
+A_BM[31:0]          Positive Clock Edge         Positive         Input         32 bit mask bits   
 A_WEN               Positive Clock Edge         Positive         Input         Write-enable  
 A_MEN               Positive Clock Edge         Positive         Input         Memory enable -> if disabled, the memory is deactivated   
 A_REN               Positive Clock Edge         Positive         Input         Read enable 
 A_CLK               Clock                       Positive         Input         Clock pin   
-A_BIST_DIN[21:0]    Positive Clock Edge         Positive         Input         22 data bits 
-A_BIST_BM[21:0]     Positive Clock Edge         Positive         Input         22 bit mask bits   
-A_BIST_ADDR[5:0]    Positive Clock Edge         Positive         Input         6 address bits for BIST mode  
+A_BIST_DIN[31:0]    Positive Clock Edge         Positive         Input         32 data bits 
+A_BIST_BM[31:0]     Positive Clock Edge         Positive         Input         32 bit mask bits   
+A_BIST_ADDR[10:0]   Positive Clock Edge         Positive         Input         11 address bits for BIST mode  
 A_BIST_WEN          Positive Clock Edge         Positive         Input         BIST Write-enable   
 A_BIST_MEN          Positive Clock Edge         Positive         Input         BIST Memory enable -> if disabled, the memory is deactivated  
 A_BIST_REN          Positive Clock Edge         Positive         Input         BIST Read enable  
 A_BIST_CLK          Clock                       Positive         Input         BIST Clock pin  
 A_BIST_EN           Positive Clock Edge         Positive         Input         BIST Enable pin 
-A_DOUT[21:0]        Positive Clock Edge         Positive         Output        22 data bits, no high impedance function   
+A_DOUT[31:0]        Positive Clock Edge         Positive         Output        32 data bits, no high impedance function   
 A_DLY               Level                       Positive         Input         Delay setting, adjustment of memory internal timings; MANDATORY setting: Tie to 1
-
-B_ADDR[5:0]         Positive Clock Edge         Positive         Input         6 address bits  
-B_DIN[21:0]         Positive Clock Edge         Positive         Input         22 data bits 
-B_BM[21:0]          Positive Clock Edge         Positive         Input         22 bit mask bits   
-B_WEN               Positive Clock Edge         Positive         Input         Write-enable  
-B_MEN               Positive Clock Edge         Positive         Input         Memory enable -> if disabled, the memory is deactivated   
-B_REN               Positive Clock Edge         Positive         Input         Read enable 
-B_CLK               Clock                       Positive         Input         Clock pin   
-B_BIST_DIN[21:0]    Positive Clock Edge         Positive         Input         22 data bits 
-B_BIST_BM[21:0]     Positive Clock Edge         Positive         Input         22 bit mask bits   
-B_BIST_ADDR[5:0]    Positive Clock Edge         Positive         Input         6 address bits for BIST mode  
-B_BIST_WEN          Positive Clock Edge         Positive         Input         BIST Write-enable   
-B_BIST_MEN          Positive Clock Edge         Positive         Input         BIST Memory enable -> if disabled, the memory is deactivated  
-B_BIST_REN          Positive Clock Edge         Positive         Input         BIST Read enable  
-B_BIST_CLK          Clock                       Positive         Input         BIST Clock pin  
-B_BIST_EN           Positive Clock Edge         Positive         Input         BIST Enable pin 
-B_DOUT[21:0]        Positive Clock Edge         Positive         Output        22 data bits, no high impedance function   
-B_DLY               Level                       Positive         Input         Delay setting, adjustment of memory internal timings; MANDATORY setting: Tie to 1
 
 VDD                                                                            Macro support logic supply voltage
 VSS                                                                            Macro support logic ground
@@ -170,31 +129,6 @@ A_BIST_EN       A_MEN         A_REN         A_WEN           Operation on Memory
     1           0 / 1         0 / 1         0 / 1           No Operation
 
 A_BIST_EN    A_BIST_MEN     A_BIST_REN     A_BIST_WEN       Operation on Memory
----------    ----------     ----------     ----------       ----------------------
-    1             0           0 / 1          0 / 1          No Operation
-    1             1             0              0            No Operation
-    1             1             1              0            Read
-    1             1             0              1            Write
-    1             1             1              1            Write-Through
-    0           0 / 1         0 / 1          0 / 1          No Operation
-
-
-When B_BIST_EN is disabled B_ADDR is used as address input.
-When B_BIST_EN is enabled B_BIST_ADDR is used as address input.
-
-! Note: One cycle before and after B_BIST_EN changes no read, write, or write-through operation is allowed.
-- Set B_MEN and B_BIST_MEN to 0.
-
-B_BIST_EN       B_MEN         B_REN         B_WEN           Operation on Memory
----------       -----         -----         -----           ----------------------
-    0             0           0 / 1         0 / 1           No Operation
-    0             1             0             0             No Operation
-    0             1             1             0             Read
-    0             1             0             1             Write
-    0             1             1             1             Write-Through
-    1           0 / 1         0 / 1         0 / 1           No Operation
-
-B_BIST_EN    B_BIST_MEN     B_BIST_REN     B_BIST_WEN       Operation on Memory
 ---------    ----------     ----------     ----------       ----------------------
     1             0           0 / 1          0 / 1          No Operation
     1             1             0              0            No Operation
@@ -255,46 +189,6 @@ All timings are identical for BIST mode.
 
 	
 
-                                WRITE                              READ                            WRITE-THROUGH                    NO OPERATION
-
-                                  |-----T_CKH----->|
-     ___________                  | _______________|                 | _______________                   _______________                  _____________
- B_CLK          \                 |/              \|                 |/               \                 /               \                /
-                 \_______________/|                |\_______________/|                 \_______________/                 \______________/
-                      |           |                                  |                         |
-                      |<-Tsetup---|                                  |-------T_CLK2DOUT------->|
-     ________________ | __________|__________|___________  _________________________________  _|_______________________________________________________
- B_ADDR      B_ADDR0 \|/          |          |  B_ADDR1  \/       B_ADDR2                   \/ |        B_ADDR3
-     ________________/|\__________|_________ |___________/\_________________________________/\_|_______________________________________________________
-                      |           |          |                                                 |
-                      |           |---Thold->|                                                 |
-     ________________ | __________|__________|___________  _________________________________  _|_______________________________________________________
- B_DIN               \|/          |          |  B_D1     \/       don't care                \/ |        B_D3
-     ________________/|\__________|__________|___________/\_________________________________/\_|_______________________________________________________
-                      |           |          |                                                 |
-                      | __________|__________|_________________________________________________|______________________
- B_MEN                |/          |          |                                                 |                      \
-     ________________/|           |          |                                                 |                       \_______________________________
-                      |           |          |                                                 |
-                      | __________|__________|                                               __|______________________
- B_WEN                |/          |          |\                                             /  |                      \
-     ________________/|           |          | \___________________________________________/   |                       \_______________________________
-                      |           |          |                                                 |
-                      |           |          |            _____________________________________|______________________
- B_REN                |           |          |           /                                     |                      \
-     _________________|___________|__________|__________/                                      |                       \_______________________________
-                      |           |          |                                                 |
-     _________________________________________________________________________________________ | ____________________________________  ________________
- B_DOUT                            'X'                                                        \|/         MEMORY(B_ADDR2)            \/    B_D3
-     _________________________________________________________________________________________/|\____________________________________/\________________
-                                                                                               |
-     ________________________________________________  __________________________________________________________________________  ____________________
- B_MEMORY                          'X'               \/          MEMORY(B_ADDR1)=B_D1                                            \/MEMORY(B_ADDR3)=B_D3
-     ________________________________________________/\__________________________________________________________________________/\____________________
-
-
-	
-
 
 ###########################
 Operating Conditions
@@ -334,8 +228,8 @@ Timing Characteristics
 +-------------------+-------------+-----------+---------------+---------------+--------------+-------+
 | Timing            | Timing Type | Direction | wc_1d08V_125C | bc_1d32V_m55C | tc_1d20V_25C | Units |
 +-------------------+-------------+-----------+---------------+---------------+--------------+-------+
-| Clock to Data Out | Delay       | Rising    | 5.15e+00      | 1.88e+00      | 3.07e+00     | ns    |
-| Clock to Data Out | Delay       | Falling   | 5.04e+00      | 1.84e+00      | 3.00e+00     | ns    |
+| Clock to Data Out | Delay       | Rising    | 9.03e+00      | 3.34e+00      | 5.41e+00     | ns    |
+| Clock to Data Out | Delay       | Falling   | 8.91e+00      | 3.30e+00      | 5.35e+00     | ns    |
 | Data Out          | Transition  | Rising    | 4.08e-02      | 1.62e-02      | 2.59e-02     | ns    |
 | Data Out          | Transition  | Falling   | 3.29e-02      | 1.35e-02      | 2.01e-02     | ns    |
 +-------------------+-------------+-----------+---------------+---------------+--------------+-------+
@@ -353,8 +247,8 @@ Typical Power Unit : 1e-12 * J/toggle = 1 * uW/MHz
 +---------------------+---------------+---------------+--------------+------------+
 | Power               | wc_1d08V_125C | bc_1d32V_m55C | tc_1d20V_25C | Units      |
 +---------------------+---------------+---------------+--------------+------------+
-| Leakage Power       | 1.638e+02     | 7.764e+01     | 2.741e+01    | 1nW        |
-| Total Typical Power | 1.731e+01     | 2.666e+01     | 2.105e+01    | 1 * uW/MHz |
+| Leakage Power       | 5.226e+03     | 1.878e+03     | 7.921e+02    | 1nW        |
+| Total Typical Power | 6.848e+01     | 1.044e+02     | 8.297e+01    | 1 * uW/MHz |
 +---------------------+---------------+---------------+--------------+------------+
 
 
@@ -365,10 +259,10 @@ Physical Layout
 
 
 Metal usage is up to M4. 
-The bottom figure shows the physical layout of the 64x22_c2 SRAM hard macro with its dimensions.
+The bottom figure shows the physical layout of the 2048x32_c2 SRAM hard macro with its dimensions.
 Note: Row decoder and interface pin locations as well as location, dimension and number of power rails are approximated.
 
-                                                  526.03 microns
+                                                  416.64 microns
          <-------------------------------------------------------------------------------------------------------->
           _________________________________________________________________________________________________________
        ^ |VDD|    |VDD|     |VDD|     |VDD|      |        |VDD|VDD|        |      |VDD|    |VDD|     |VDD|    |VDD|  ^
@@ -380,7 +274,7 @@ Note: Row decoder and interface pin locations as well as location, dimension and
        | |   |    |PWR|     |   |     |PWR|      |    T   |   |   |   H    |      |PWR|    |   |     |PWR|    |   |  |
        | |   |    |   |     |   |     |   |      |        |   |   |  T     |      |   |    |   |     |   |    |   |  |
 SRAM   | |   |    |   |     |   |     |   |      |  R     |   |   |     R  |      |   |    |   |     |   |    |   |  |
-Array  | |   |    |   |     |   |     |   |      |   O    |   |   |    O   |      |   |    |   |     |   |    |   |  |74.87 microns
+Array  | |   |    |   |     |   |     |   |      |   O    |   |   |    O   |      |   |    |   |     |   |    |   |  |626.7 microns
        | |S  |    |S  |     |S  |     |S  |      |    W   |S  |  S|   W    |      |  S|    |  S|	 |  S|    |  S|  |
        | | T |    | T |     | T |     | T |      |  D     | T | T |     D  |      | T |    | T |	 | T |    | T |  |
        | |  R|    |  R|     |  R|     |  R|      |   E    |  R|R  |    E   |      |R  |    |R  |	 |R  |    |R  |  |
@@ -398,10 +292,10 @@ Pins   v |___|____|___|_____|___|_____|___|______|________|___|___|________|____
 
 Address calculation for BIST_ADDR in BIST modeare identical to ADDR as seen below.
 
-The SRAM macro is physically organized in 2 x 44 horizontal x 64 vertical bit cells:
- - Row address pins (MSB..LSB)     : 4;           ya[3:0]     = ADDR[6:2]         
+The SRAM macro is physically organized in 2 x 64 horizontal x 2048 vertical bit cells:
+ - Row address pins (MSB..LSB)     : 9;           ya[8:0]     = ADDR[11:2]        
  - Column address pins (MSB..LSB)  : 2;           xa[1:0]     = ADDR[1:0]         
- - Data pins (MSB..LSB)            : 22;          xa[21:0]    = DIN[21:0], DOUT[21:0].
+ - Data pins (MSB..LSB)            : 32;          xa[31:0]    = DIN[31:0], DOUT[31:0].
 
 The scrambling scheme reads as follows:
  - X-Address Scrambling: xa[i] = x[i]
